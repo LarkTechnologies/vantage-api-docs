@@ -8,13 +8,13 @@ info:
 servers:
   - url: https://api.lark.com
 tags:
-  - name: members
+  - name: Member Data
     description: Retrieve prior authorization for partner members.
 paths:
   /partners/{partner_id}/members/search:
     post:
       tags:
-        - members
+        - Member Data
       summary: Find members by characteristics.
       description: Find all member_ids based on first_name, last_name and dob.
       operationId: find_members
@@ -101,7 +101,7 @@ paths:
   /partners/{partner_id}/members/{member_id}:
     get:
       tags:
-        - members
+        - Member Data
       summary: Get a member by ID.
       description: Retrieve a single member's prior authorization data by their unique ID.
       operationId: get_member_by_id
@@ -156,7 +156,7 @@ paths:
   /partners/{partner_id}/members:
     get:
       tags:
-        - members
+        - Member Data
       summary: Find prior authorization data for all partner members.
       description: Since an active date can be provided which can provide all members since a given date.
       operationId: find_all_members
