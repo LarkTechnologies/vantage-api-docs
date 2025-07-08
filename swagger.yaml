@@ -248,53 +248,7 @@ components:
           scopes:
             api://vantage/partners/2886aace-2a23-5898-9db4-3022605ef5e8: Grants read access to member data.
   schemas:
-    Pagination:
-      type: object
-      description: Metadata about pagination and total results.
-      properties:
-        offset:
-          type: integer
-          format: int32
-          description: The current offset used for this page of results.
-          example: 0
-        limit:
-          type: integer
-          format: int32
-          description: The maximum number of items requested for this page.
-          example: 50
-        next_offset:
-          type: integer
-          format: int32
-          description: The offset value to use for the next page of results. Null if no more results.
-          nullable: true
-          example: 50
-        total_items:
-          type: integer
-          format: int64
-          description: The total number of items available across all pages.
-          example: 1000
-        has_more:
-          type: boolean
-          description: Indicates if there are more results beyond the current page.
-          example: true
-    MemberSearch:
-      description: Member characteristics used to retrieved member_id.
-      required:
-        - first_name
-        - last_name
-        - dob
-      type: object
-      properties:
-        first_name:
-          type: string
-          example: John
-        last_name:
-          type: string
-          example: Doe
-        dob:
-          type: string
-          example: 1958-01-01
-    Member:
+      Member:
       description: Member Data for prior auth.
       required:
         - id
@@ -382,6 +336,52 @@ components:
           type: string
           example: Lost all weight
           nullable: true # Added nullable as this might not always be present
+    MemberSearch:
+      description: Member characteristics used to retrieved member_id.
+      required:
+        - first_name
+        - last_name
+        - dob
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        dob:
+          type: string
+          example: 1958-01-01
+    Pagination:
+      type: object
+      description: Metadata about pagination and total results.
+      properties:
+        offset:
+          type: integer
+          format: int32
+          description: The current offset used for this page of results.
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          description: The maximum number of items requested for this page.
+          example: 50
+        next_offset:
+          type: integer
+          format: int32
+          description: The offset value to use for the next page of results. Null if no more results.
+          nullable: true
+          example: 50
+        total_items:
+          type: integer
+          format: int64
+          description: The total number of items available across all pages.
+          example: 1000
+        has_more:
+          type: boolean
+          description: Indicates if there are more results beyond the current page.
+          example: true
     Error:
       description: Error Handling Response.
       type: object
