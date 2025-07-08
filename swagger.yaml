@@ -248,7 +248,7 @@ components:
           scopes:
             api://vantage/partners/2886aace-2a23-5898-9db4-3022605ef5e8: Grants read access to member data.
   schemas:
-      Member:
+    Member:
       description: Member Data for prior auth.
       required:
         - id
