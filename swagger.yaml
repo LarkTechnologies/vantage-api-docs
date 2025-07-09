@@ -2,14 +2,14 @@ openapi: 3.0.4
 info:
   title: Lark Vantage REST API
   description: |-
-    The Lark Vantage REST API enables real-time exchange of member eligibility, medication history, and clinical data to inform intelligent GLP-1 PA and RA decisions, adherence management, and cost containment strategies within the PBM's ecosystem.
+    The Lark Vantage REST API enables on-demand exchange of member eligibility, medication history, and clinical data to inform intelligent GLP-1 PA and RA decisions, adherence management, and cost containment strategies within the PBM's ecosystem.
   termsOfService: https://lark.com # TODO, replace with the real ToS once we have one
   version: 1.0.0
 servers:
   - url: https://api.lark.com
 tags:
   - name: Member Data
-    description: Retrieve prior authorization for partner members.
+    description: Retrieve partner member data.
 paths:
   /partners/{partner_id}/members/search:
     post:
@@ -201,8 +201,8 @@ paths:
     get:
       tags:
         - Member Data
-      summary: Find prior authorization data for all partner members.
-      description: Since an active date can be provided which can provide all members since a given date.
+      summary: Find member data for all partner members.
+      description: Provide member data since a given enrollment date, if applicable.
       operationId: find_all_members
       parameters:
         - name: partner_id
@@ -220,7 +220,7 @@ paths:
             enum:
               - 'v1'
             default: 'v1'
-        - name: since_active_date
+        - name: since_enrollment_date
           in: query
           description: |
             A date string in YYYY-MM-DD format.
@@ -321,7 +321,7 @@ components:
             api://vantage/partners/2886aace-2a23-5898-9db4-3022605ef5e8: Grants read access to member data.
   schemas:
     Member:
-      description: Data and engagement metrics for a specific member, used in prior authorization processes.
+      description: Data and engagement metrics for a specific member.
       required:
         - id
         - first_name
