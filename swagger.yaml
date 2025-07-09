@@ -21,7 +21,7 @@ paths:
       parameters:
         - name: partner_id
           in: path
-          description: ID of partner
+          description: partner id
           required: true
           schema:
             type: string
@@ -36,7 +36,7 @@ paths:
             default: 'v1'
         - name: lookback_period_days
           in: query
-          description: Lookback window for engagement.
+          description: Lookback window to aggregate member engagement metrics.
           required: false
           schema:
             type: number
@@ -63,7 +63,7 @@ paths:
             format: int32
             default: 50
             minimum: 1
-            maximum: 1000            
+            maximum: 1000
       requestBody:
         description: Retrieve all member_ids by first_name, last_name, dob.
         content:
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object # Changed from 'array' to 'object'
+                type: object
                 properties:
                   members:
                     type: array
@@ -92,6 +92,28 @@ paths:
 
         '400':
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: Invalid OAuth Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '403':
+          description: Insufficient permissions to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
           content:
@@ -103,18 +125,18 @@ paths:
       tags:
         - Member Data
       summary: Get a member by ID.
-      description: Retrieve a single member's prior authorization data by their unique ID.
+      description: Retrieve a single member data queried by member_id.
       operationId: get_member_by_id
       parameters:
         - name: partner_id
           in: path
-          description: ID of partner
+          description: partner id
           required: true
           schema:
             type: string
         - name: member_id
           in: path
-          description: ID of member
+          description: member id
           required: true
           schema:
             type: string
@@ -129,7 +151,7 @@ paths:
             default: 'v1'
         - name: lookback_period_days
           in: query
-          description: Lookback window for engagement.
+          description: Lookback window to aggregate member engagement metrics.
           required: false
           schema:
             type: number
@@ -146,7 +168,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/Member'
         '400':
-          description: Invalid status value
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: Invalid OAuth Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '403':
+          description: Insufficient permissions to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
           content:
@@ -187,7 +231,7 @@ paths:
             example: 2025-07-08
         - name: lookback_period_days
           in: query
-          description: Lookback window for engagement.
+          description: Lookback window to aggregate member engagement metrics.
           required: false
           schema:
             type: number
@@ -218,15 +262,43 @@ paths:
 
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Member'
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Member'
+                  page:
+                    type: object
+                    $ref: "#/components/schemas/Pagination"
         '400':
-          description: Invalid tag value
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '401':
+          description: Invalid OAuth Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '403':
+          description: Insufficient permissions to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
           content:
@@ -249,7 +321,7 @@ components:
             api://vantage/partners/2886aace-2a23-5898-9db4-3022605ef5e8: Grants read access to member data.
   schemas:
     Member:
-      description: Member Data for prior auth.
+      description: Data and engagement metrics for a specific member, used in prior authorization processes.
       required:
         - id
         - first_name
@@ -272,16 +344,20 @@ components:
       properties:
         id:
           type: string
+          description: member id
           example: 8c3e1a7b-2e9f-4d0c-b1a2-3f4e5d6c7b8a
         first_name:
           type: string
+          description: member's first name.
           example: John
         last_name:
           type: string
+          description: member's last name.
           example: Doe
         dob:
           type: string
-          format: date # Changed example to align with date format
+          format: date
+          description: member's date of birth.
           example: 1958-01-01
         eligible:
           type: boolean
@@ -289,53 +365,67 @@ components:
           example: true
         lark_start_date:
           type: string
-          format: date # Added format for consistency if it's a date only
+          format: date
+          description: Lark Activation Date.
           example: 2025-01-01
         program_name:
           type: string
+          description: Program that the member belongs to.
           example: Weight Loss
         initial_bmi:
-          type: number # Changed to number as BMI is numeric
-          format: float # Or 'double' for higher precision
+          type: number
+          format: float
+          description: Initial BMI of member.
           example: 14.5
         last_known_bmi:
-          type: number # Changed to number
+          type: number
           format: float
+          description: Last tracked BMI of member.
           example: 14.5
         last_known_bmi_date:
           type: string
           format: date-time
+          description: Last tracked BMI date of member.
           example: 2025-02-01T20:58:53Z
         weight_loss_pct:
-          type: number # Changed to number as it's a percentage
+          type: number
           format: float
+          description: The weight loss percentages. Calculated using first known weight and last known weight.
           example: 5.0
         last_known_weight_date:
           type: string
           format: date-time
+          description: The date of the last confirmed weight logged by the user after program starts.
           example: 2025-02-01T20:58:53Z
         time_in_program:
-          type: integer # Changed to integer if it's days/minutes as a whole number
+          type: integer
+          description: Number of days member was in the program.
           example: 125
         num_coaching_conversations:
-          type: integer # Changed to integer
+          type: integer
+          description: The number of coaching conversations within the reporting period.
           example: 20
         num_weight_measurements:
-          type: integer # Changed to integer
+          type: integer
+          description: The number of weight measurements from a Lark device within the reporting time range.
           example: 10
         activity_total_min:
-          type: integer # Changed to integer
+          type: integer
+          description: The number of minutes of physical activity.
           example: 120
         num_meals_logged:
-          type: integer # Changed to integer
+          type: integer
+          description: The number of meals logged from a Lark device within the reporting time range.
           example: 10
         program_discontinued:
           type: boolean
+          description: Whether member discontinued from the program.
           example: false
         program_discontinued_reason:
           type: string
+          description: Reason why member discontinued from the program.
           example: Lost all weight
-          nullable: true # Added nullable as this might not always be present
+          nullable: true
     MemberSearch:
       description: Member characteristics used to retrieved member_id.
       required:
