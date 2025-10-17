@@ -1,0 +1,6 @@
+name: vantage-api-docs
+metaData:
+  domain:
+    name: vantage-api-docs
+    jira: DENG
+  documentationIndexPage: ''
